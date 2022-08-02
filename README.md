@@ -1,4 +1,4 @@
-# f1pitstop
+# f1pitngo
 
 ## Initial setup
 React website displaying Formula 1 content
