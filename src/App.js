@@ -7,19 +7,30 @@ class App extends Component {
     super();
 
     this.state = {
-      name: 'Lewis'
-    }
+      drivers: [],
+    };
   }
+
+  componentDidMount() {
+    fetch('https://jsonplaceholder.typicode.com/users')
+    .then((response) => response.json())
+    .then((users) => this.setState(() => {
+      return {drivers: users}
+    }));
+  }
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-           Hi {this.state.name}
-          </p>
-          <button>Change name</button>
-        </header>
+        {
+          this.state.drivers.map((driver) => {
+            return (
+              <div key={driver.id}>
+                <h1>{driver.name}</h1>
+              </div>
+            );
+          })
+        }
       </div>
     );
   }
