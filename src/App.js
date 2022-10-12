@@ -7,7 +7,8 @@ class App extends Component {
     super();
 
     this.state = {
-      name: 'Lewis'
+      name: {firstName: 'Lewis', lastName:'Hamilton'},
+      team: 'Mercedes'
     }
   }
   render() {
@@ -16,9 +17,21 @@ class App extends Component {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p>
-           Hi {this.state.name}
+           Hi, I am {this.state.name.firstName} {this.state.name.lastName}, I drive for {this.state.team}
           </p>
-          <button>Change name</button>
+          <button onClick={() => {
+                this.setState(() => {
+                  return {
+                    name: {firstName: 'Lando', lastName:'Norris'}, 
+                    team: 'McLaren' 
+                  }
+                }, 
+                () => {
+                  // Callback: Do this when we are done setting the state
+                  console.log(this.state)
+                })
+            }}
+            >Change name</button>
         </header>
       </div>
     );
