@@ -1,5 +1,7 @@
 import { Component } from 'react';
-import logo from './logo.svg';
+
+import CardList from './components/card-list/card-list.component';
+import SearchBox from './components/search-box/search-box.component';
 import './App.css';
 
 class App extends Component {
@@ -8,6 +10,7 @@ class App extends Component {
 
     this.state = {
       drivers: [],
+      searchField: ''
     };
   }
 
@@ -19,18 +22,26 @@ class App extends Component {
     }));
   }
 
+  onSearchChange = (event) => {
+    const searchField = event.target.value.toLocaleLowerCase(); 
+    this.setState(() => {
+      return { searchField }
+    });
+  }
+
   render() {
+    //Destructuring
+    const { drivers, searchField } = this.state;
+    const { onSearchChange } = this;
+
+    const filteredDrivers = drivers.filter((driver) => {
+      return driver.name.toLocaleLowerCase().includes(searchField);
+    })
     return (
       <div className="App">
-        {
-          this.state.drivers.map((driver) => {
-            return (
-              <div key={driver.id}>
-                <h1>{driver.name}</h1>
-              </div>
-            );
-          })
-        }
+        <h1 className='app-title'>Drivers</h1>
+        <SearchBox className='drivers-search-box' onChangeHandler={onSearchChange} placeholder='Search Driver'/>
+        <CardList drivers={filteredDrivers}/>
       </div>
     );
   }
