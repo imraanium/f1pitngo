@@ -1,50 +1,38 @@
-import { Component } from 'react';
-
+import { useState, useEffect } from 'react';
 import CardList from './components/card-list/card-list.component';
 import SearchBox from './components/search-box/search-box.component';
 import './App.css';
 
-class App extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      drivers: [],
-      searchField: ''
-    };
-  }
-
-  componentDidMount() {
+const App = () => {
+  const [searchField, setSearchField] = useState('');
+  const [drivers, setDrivers] = useState([]);
+  const [filteredDrivers, setFilteredDrivers] = useState(drivers);
+   
+  useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/users')
     .then((response) => response.json())
-    .then((users) => this.setState(() => {
-      return {drivers: users}
-    }));
-  }
+    .then((users) => setDrivers(users));
+  }, []);
 
-  onSearchChange = (event) => {
-    const searchField = event.target.value.toLocaleLowerCase(); 
-    this.setState(() => {
-      return { searchField }
-    });
-  }
-
-  render() {
-    //Destructuring
-    const { drivers, searchField } = this.state;
-    const { onSearchChange } = this;
-
-    const filteredDrivers = drivers.filter((driver) => {
+  useEffect(() => {
+    const filteredDriversList = drivers.filter((driver) => {
       return driver.name.toLocaleLowerCase().includes(searchField);
     })
-    return (
+    setFilteredDrivers(filteredDriversList);
+  }, [drivers, searchField]);
+
+  const onSearchChange = (event) => {
+    const searchFieldString = event.target.value.toLocaleLowerCase();
+    setSearchField(searchFieldString); 
+  }
+
+   return(
       <div className="App">
         <h1 className='app-title'>Drivers</h1>
         <SearchBox className='drivers-search-box' onChangeHandler={onSearchChange} placeholder='Search Driver'/>
         <CardList drivers={filteredDrivers}/>
       </div>
-    );
-  }
-}
+   ); 
+};
 
 export default App;
